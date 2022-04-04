@@ -4,12 +4,12 @@ cmake_minimum_required(VERSION 3.15)
 
 # detect if MyHovercraftIsFullOfEels is being used as a sub-project of another CMake project
 if(NOT DEFINED PROJECT_NAME)
-    set(MY_HOVERCRAFT_IS_FULL_OF_EELS_SUBPROJECT OFF)
+    set(WX_WIDGETS_TEST_SUBPROJECT OFF)
 else()
-    set(MY_HOVERCRAFT_IS_FULL_OF_EELS_SUBPROJECT ON)
+    set(WX_WIDGETS_TEST_SUBPROJECT ON)
 endif()
 
-project(my-hovercraft-is-full-of-eels VERSION 0.4.1 LANGUAGES CXX)
+project(wx-widgets-test VERSION 0.4.1 LANGUAGES CXX)
 
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
@@ -27,40 +27,40 @@ endif()
 
 # set some handy custom variables to detect Release-type builds from Debug-type ones
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(MY_HOVERCRAFT_IS_FULL_OF_EELS_BUILD_DEBUG ON)
-    set(MY_HOVERCRAFT_IS_FULL_OF_EELS_BUILD_RELEASE OFF)
+    set(WX_WIDGETS_TEST_BUILD_DEBUG ON)
+    set(WX_WIDGETS_TEST_BUILD_RELEASE OFF)
 else()
-    set(MY_HOVERCRAFT_IS_FULL_OF_EELS_BUILD_DEBUG OFF)
-    set(MY_HOVERCRAFT_IS_FULL_OF_EELS_BUILD_RELEASE ON)
+    set(WX_WIDGETS_TEST_BUILD_DEBUG OFF)
+    set(WX_WIDGETS_TEST_BUILD_RELEASE ON)
 endif()
 
-message(STATUS "[my-hovercraft-is-full-of-eels] Build Mode: ${CMAKE_BUILD_TYPE}")
+message(STATUS "[wx-widgets-test] Build Mode: ${CMAKE_BUILD_TYPE}")
 
 # set the C++ standard to use to C++20 always
-set(MY_HOVERCRAFT_IS_FULL_OF_EELS_CXX_STANDARD "20")
-message(STATUS "[my-hovercraft-is-full-of-eels] C++ Standard set to C++${MY_HOVERCRAFT_IS_FULL_OF_EELS_CXX_STANDARD}")
-set(CMAKE_CXX_STANDARD ${MY_HOVERCRAFT_IS_FULL_OF_EELS_CXX_STANDARD})
+set(WX_WIDGETS_TEST_CXX_STANDARD "20")
+message(STATUS "[wx-widgets-test] C++ Standard set to C++${WX_WIDGETS_TEST_CXX_STANDARD}")
+set(CMAKE_CXX_STANDARD ${WX_WIDGETS_TEST_CXX_STANDARD})
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # end basic metadata
 
 # This is a special target which only exists to capture compilation options
-# used for my-hovercraft-is-full-of-eels and its tests. This is to avoid setting global compiler
+# used for wx-widgets-test and its tests. This is to avoid setting global compiler
 # options which would be inherited by dependencies as well, which is bad
-# because my-hovercraft-is-full-of-eels uses strict compiler warning options which not all other
+# because wx-widgets-test uses strict compiler warning options which not all other
 # projects can build successfully with.
 # Any target linked with this one will inherit the compiler options used for
-# my-hovercraft-is-full-of-eels.
-add_library(my-hovercraft-is-full-of-eels-compiler-options INTERFACE)
+# wx-widgets-test.
+add_library(wx-widgets-test-compiler-options INTERFACE)
 
 # used for enabling additional compiler options if supported
 include(CheckCXXCompilerFlag)
 
 function(enable_cxx_compiler_flag_if_supported flag)
-    message(STATUS "[my-hovercraft-is-full-of-eels] Checking if compiler supports warning flag '${flag}'")
+    message(STATUS "[wx-widgets-test] Checking if compiler supports warning flag '${flag}'")
     check_cxx_compiler_flag("${flag}" flag_supported)
     if(flag_supported)
-        message(STATUS "[my-hovercraft-is-full-of-eels] Enabling warning flag '${flag}'")
-        target_compile_options(my-hovercraft-is-full-of-eels-compiler-options INTERFACE "${flag}")
+        message(STATUS "[wx-widgets-test] Enabling warning flag '${flag}'")
+        target_compile_options(wx-widgets-test-compiler-options INTERFACE "${flag}")
     endif()
     unset(flag_supported CACHE)
 endfunction()
@@ -120,5 +120,5 @@ CPMFindPackage(
 )
 
 add_executable(demo main.cpp)
-# target_link_libraries(demo PRIVATE my-hovercraft-is-full-of-eels-compiler-options)
+# target_link_libraries(demo PRIVATE wx-widgets-test-compiler-options)
 target_link_libraries(demo PRIVATE wx::net wx::core wx::base)
