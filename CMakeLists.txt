@@ -41,30 +41,6 @@ set(MY_HOVERCRAFT_IS_FULL_OF_EELS_CXX_STANDARD "20")
 message(STATUS "[my-hovercraft-is-full-of-eels] C++ Standard set to C++${MY_HOVERCRAFT_IS_FULL_OF_EELS_CXX_STANDARD}")
 set(CMAKE_CXX_STANDARD ${MY_HOVERCRAFT_IS_FULL_OF_EELS_CXX_STANDARD})
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-include(CMakeDependentOption)
-# if building in Release mode, provide an option to explicitly enable tests if desired (always ON for other builds, OFF by default for Release builds)
-cmake_dependent_option(ENABLE_TESTS "Build the unit tests in release mode?" OFF MY_HOVERCRAFT_IS_FULL_OF_EELS_BUILD_RELEASE ON)
-
-# Premature Optimisation causes problems. Commented out code below allows detection and enabling of LTO.
-# It's not being used currently because it seems to cause linker errors with Clang++ on Ubuntu if the library
-# is compiled with LTO but the unit tests are not. This suggests LTO may force some downstream software into
-# using LTO also if it's enabled. The plan is to reënable LTO as an option in the future, possibly done much
-# more optionally (and probably not by default).
-
-# include(CheckIPOSupported)
-# check_ipo_supported(RESULT IPO_SUPPORTED)
-# # If we're in Release mode, set MY_HOVERCRAFT_IS_FULL_OF_EELS_USE_IPO to ON by default if it's detected as supported (user can always explicitly enable it in Release mode)
-# cmake_dependent_option(MY_HOVERCRAFT_IS_FULL_OF_EELS_USE_IPO "Use Link-Time/Inter-Procedural Optimisation?" ${IPO_SUPPORTED} MY_HOVERCRAFT_IS_FULL_OF_EELS_BUILD_RELEASE OFF)
-# if(MY_HOVERCRAFT_IS_FULL_OF_EELS_USE_IPO)
-#     message(STATUS "[my-hovercraft-is-full-of-eels] Link-Time-Optimisation Enabled")
-# endif()
-
-set(
-    MY_HOVERCRAFT_IS_FULL_OF_EELS_VERSION_STRING
-    "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}"
-)
-set(MY_HOVERCRAFT_IS_FULL_OF_EELS_ESCAPED_VERSION_STRING "\"${MY_HOVERCRAFT_IS_FULL_OF_EELS_VERSION_STRING}\"")
 # end basic metadata
 
 # This is a special target which only exists to capture compilation options
@@ -135,11 +111,14 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Mo
 # a better way to load dependencies
 include(CPM)
 
-# library
-add_subdirectory(my-hovercraft-is-full-of-eels)
-# unit tests --only enable if requested AND we're not building as a sub-project
-if(ENABLE_TESTS AND NOT MY_HOVERCRAFT_IS_FULL_OF_EELS_SUBPROJECT)
-    message(STATUS "[my-hovercraft-is-full-of-eels] Unit Tests Enabled")
-    add_subdirectory(tests)
-    enable_testing()
-endif()
+# add wxWidgets as dependency
+CPMFindPackage(
+    NAME wxWidgets
+    GIT_REPOSITORY https://github.com/wxWidgets/wxWidgets
+    GIT_TAG v3.1.6
+    EXCLUDE_FROM_ALL YES
+)
+
+add_executable(demo main.cpp)
+# target_link_libraries(demo PRIVATE my-hovercraft-is-full-of-eels-compiler-options)
+target_link_libraries(demo PRIVATE wx::net wx::core wx::base)
