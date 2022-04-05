@@ -55,10 +55,10 @@ jobs:
             ${{ env.cache-name }}-${{ matrix.os }}-${{ matrix.cxx }}-
 
       # when building on master branch and not a pull request, build and test in release mode (optimised build)
-      - name: Set Build Mode to Release
-        shell: bash
-        if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/master' }}
-        run: echo "BUILD_TYPE=Release" >> $GITHUB_ENV
+      # - name: Set Build Mode to Release
+      #   shell: bash
+      #   if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/master' }}
+      #   run: echo "BUILD_TYPE=Release" >> $GITHUB_ENV
 
       - name: Configure CMake
         env:
