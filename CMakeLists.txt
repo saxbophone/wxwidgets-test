@@ -119,6 +119,6 @@ CPMFindPackage(
     EXCLUDE_FROM_ALL YES
 )
 
-add_executable(demo main.cpp)
+add_executable(demo WIN32 main.cpp)
 # target_link_libraries(demo PRIVATE wx-widgets-test-compiler-options)
 target_link_libraries(demo PRIVATE wx::net wx::core wx::base)
