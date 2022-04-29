@@ -1,0 +1,3 @@
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://stand-with-ukraine.pp.ua)
+# wxWidgets cross-platform CMake test
+If anybody wanted to build a wxWidgets project cross-platform, this would be the way to do it...
