@@ -28,7 +28,7 @@ jobs:
             cxx: msvc
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Configure CMake
         env:
@@ -55,7 +55,7 @@ jobs:
         run: cmake --install . --config $BUILD_TYPE
 
       - name: Upload
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: wx-widgets-test_build_${{ github.run_number }}_${{ matrix.platform_name }}
           path: ${{github.workspace}}/artifacts
