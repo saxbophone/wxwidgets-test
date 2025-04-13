@@ -39,7 +39,7 @@ jobs:
         run: sudo apt-get install libgtk-3-dev libglew-dev
 
       - name: Cache CMake dependency source code
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         env:
           cache-name: cache-cmake-dependency-sources
         with:
