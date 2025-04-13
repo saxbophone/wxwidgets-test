@@ -30,6 +30,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Linux Dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get install libgtk-3-dev libglew-dev
+
       - name: Configure CMake
         env:
           CXX: ${{ matrix.cxx }}
