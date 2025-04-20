@@ -1,6 +1,8 @@
 name: build-release
 
 on:
+  workflow_dispatch:
+  
   release:
     types: [published]
 
@@ -15,18 +17,22 @@ jobs:
         # specify a specific compiler to build with each OS separately
         include:
           - platform_name: linux
-            os: ubuntu-20.04
-            cxx: g++-10
+            os: ubuntu-latest
+            cxx: g++
           - platform_name: macos
-            os: macos-10.15
+            os: macos-latest
             cxx: clang++
           # NOTE: CXX seems to be ignored on Windows, but specify it anyway for consistency
           - platform_name: windows
-            os: windows-2019
+            os: windows-latest
             cxx: msvc
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
+      - name: Install Linux Dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get install libgtk-3-dev libglew-dev
 
       - name: Configure CMake
         env:
@@ -53,7 +59,7 @@ jobs:
         run: cmake --install . --config $BUILD_TYPE
 
       - name: Upload
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: wx-widgets-test_build_${{ github.run_number }}_${{ matrix.platform_name }}
           path: ${{github.workspace}}/artifacts
